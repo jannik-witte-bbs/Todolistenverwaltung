@@ -1,0 +1,177 @@
+openapi: 3.0.1
+info:
+  title: Todo-Listen-Verwaltung
+  description: Eine RESTful API zur Verwaltung von Todo-Listen und Einträgen.
+  contact:
+    email: wichmann@bbs-os-brinkstr.de
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.1.0
+servers:
+  - url: http://127.0.0.1:5000/
+paths:
+  /list/{list_id}:
+    get:
+      summary: Liefert alle Einträge einer Todo-Liste zurück
+      parameters:
+        - name: list_id
+          in: path
+          description: ID der gewünschten Liste
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Liste mit Einträgen zurückgegeben
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+        '404':
+          description: Ungültige Listen-ID
+    delete:
+      summary: Löscht eine komplette Todo-Liste mit allen Einträgen
+      parameters:
+        - name: list_id
+          in: path
+          description: ID der zu löschenden Liste
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Liste wurde gelöscht
+        '404':
+          description: Ungültige Listen-ID
+        '500':
+          description: Löschen nicht möglich
+  /list:
+    post:
+      summary: Fügt eine neue Todo-Liste hinzu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Liste wurde hinzugefügt
+        '400':
+          description: Übergebene Daten nicht valide
+        '500':
+          description: Anlegen nicht möglich
+  /list/{list_id}/item:
+    post:
+      summary: Fügt einen Eintrag zu einer Todo-Liste hinzu
+      parameters:
+        - name: list_id
+          in: path
+          description: ID der gewünschten Liste
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoEntry'
+      responses:
+        '201':
+          description: Eintrag wurde hinzugefügt
+        '400':
+          description: Übergebene Daten nicht valide
+        '404':
+          description: ID nicht existiert
+        '500':
+          description: Anlegen nicht möglich
+  /list/{list_id}/item/{item_id}:
+    patch:
+      summary: Aktualisiert einen bestehenden Eintrag
+      parameters:
+        - name: list_id
+          in: path
+          description: ID der gewünschten Liste
+          required: true
+          schema:
+            type: string
+        - name: item_id
+          in: path
+          description: ID des gewählten Eintrags
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoEntry'
+      responses:
+        '200':
+          description: Eintrag wurde aktualisiert
+        '404':
+          description: Eine der IDs nicht existiert
+        '500':
+          description: Änderung nicht durchgeführt
+    delete:
+      summary: Löscht einen einzelnen Eintrag einer Todo-Liste
+      parameters:
+        - name: list_id
+          in: path
+          description: ID der gewünschten Liste
+          required: true
+          schema:
+            type: string
+        - name: item_id
+          in: path
+          description: ID des gewählten Eintrags
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Eintrag wurde gelöscht
+        '404':
+          description: Eine der IDs nicht existiert
+        '500':
+          description: Löschen nicht möglich
+  /lists:
+    get:
+      summary: Liefert eine Liste aller Todo-Listen
+      responses:
+        '200':
+          description: Liste aller Todo-Listen zurückgegeben
+        '500':
+          description: Daten nicht geliefert
+components:
+  schemas:
+    TodoEntry:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name des Eintrags
+        description:
+          type: string
+          description: Beschreibung des Eintrags
+        user_id:
+          type: string
+          description: ID des Benutzers
+    TodoList:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID der Liste
+        name:
+          type: string
+          description: Name der Liste
