@@ -10,9 +10,9 @@ app = Flask(__name__)
 todo_list_1_id = '1318d3d1-d979-47e1-a225-dab1751dbe75'
 todo_list_2_id = '3062dc25-6b80-4315-bb1d-a7c86b014c65'
 todo_list_3_id = '44b02e00-03bc-451d-8d01-0c67ea866fee'
-todo_1_id = uuid.uuid4()
-todo_2_id = uuid.uuid4()
-todo_3_id = uuid.uuid4()
+todo_1_id = '5a58c4d9-19a2-4500-acd4-7ec42d2f3989'
+todo_2_id = 'f02b630e-692e-4b48-bd1b-d2d84f08b67e'
+todo_3_id = '7171116c-7cf6-4ec4-a5df-b736fe28e371'
 todo_4_id = uuid.uuid4()
 
 # define internal data structures with example data
@@ -32,7 +32,7 @@ todos = [
 @app.after_request
 def apply_cors_header(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET,POST,DELETE'
+    response.headers['Access-Control-Allow-Methods'] = 'GET,POST,DELETE,PATCH'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
 
