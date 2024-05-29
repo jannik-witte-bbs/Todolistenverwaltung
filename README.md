@@ -9,9 +9,9 @@
 
   ```plaintext
   interface eth0
-  static ip_address=192.168.1.100/24
-  static routers=192.168.1.1
-  static domain_name_servers=192.168.1.1 8.8.8.8
+  static ip_address=192.168.24.185
+  static routers=192.168.24.254
+  static domain_name_servers=192.168.24.254
   ```
 
 - **Dienst neu starten:** `sudo service dhcpcd restart`
@@ -70,4 +70,29 @@
   - **Docker-Version:** `docker --version`
   - **Docker-Dienststatus:** `sudo systemctl status docker`
 
-Diese Dokumentation enthält alle wesentlichen Schritte und Befehle, die zur Einrichtung deines Projekts erforderlich sind. Sie bietet eine gute Grundlage für deine Projektdokumentation. Solltest du weitere Details hinzufügen oder anpassen wollen, lass es mich wissen!
+
+# Deployment der Web-App „Todo-Listen-Verwaltung“ als Container
+
+## Dockerfile
+
+```dockerfile
+# Basisimage für Python-Anwendungen herunterladen
+FROM python:3.11-alpine
+
+# Benenne Port, der von der Web-App genutzt wird
+EXPOSE 5000
+
+# Arbeitsverzeichnis im Container wechseln
+WORKDIR /app
+
+# Notwendige Bibliotheken installieren
+RUN pip install flask
+
+# Kopiere lokale Datei in das Container-Image
+COPY server.py /app
+
+# Konfiguriere den Befehl, der im Container ausgeführt werden soll 
+# (Anwendung Python + Skriptname als Parameter)
+ENTRYPOINT [ "python" ]
+CMD ["server.py" ]
+
